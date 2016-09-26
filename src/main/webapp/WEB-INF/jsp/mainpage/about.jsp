@@ -93,12 +93,13 @@
 				<p class="text-faded">System wymiany walut zapewnia dostęp do
 					usług finansowych dla konsumentów i biznesmenów na całym świecie.
 					Pozwala w dowolnym miejscu na świecie wysłać pieniądze szybko,
-					solidnie i tanio!</p>
+					solidnie i tanio! System wymiany walut jest wiądącym serwisem
+					webowym oferującym szybką wymianę walut oraz inne usługi płatnicze.</p>
 				<a href="/system-exchange-curriencies/mainpage/register/"
 					class="page-scroll btn btn-default btn-xl sr-button">Start!</a>
 			</div>
 		</div>
 	</div>
-	
+
 </body>
 </html>
