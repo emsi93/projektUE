@@ -87,18 +87,21 @@
 					data-target="#demo"><i class="glyphicon glyphicon-euro"></i>Operacje<i
 						class="fa fa-fw fa-caret-down"></i></a>
 					<ul id="demo" class="collapse">
-						<li><a href="javascript:;" class="submit" id="sprzedajWalute">Sprzedaj walutę</a>
-						</li>
-						<li><a href="javascript:;" class="submit" id="kupWalute">Kup walutę</a></li>
-						<li><a href="javascript:;" class="submit" id="wymienWalute">Wymień walutę</a></li>
+						<li><a href="javascript:;" class="submit" id="sprzedajWalute">Sprzedaj
+								walutę</a></li>
+						<li><a href="javascript:;" class="submit" id="kupWalute">Kup
+								walutę</a></li>
+						<li><a href="javascript:;" class="submit" id="wymienWalute">Wymień
+								walutę</a></li>
 					</ul></li>
 				<li><a href="javascript:;" data-toggle="collapse"
 					data-target="#demo2"><i class="glyphicon glyphicon-briefcase"></i>Rachunki
 						bankowe<i class="fa fa-fw fa-caret-down"></i></a>
 					<ul id="demo2" class="collapse">
-						<li><a href="javascript:;" class="submit" id="listaRachunkow">Lista rachunków</a>
-						</li>
-						<li><a href="javascript:;" class="submit" id="dodajRachunek">Dodaj rachunek</a></li>
+						<li><a href="javascript:;" class="submit" id="listaRachunkow">Lista
+								rachunków</a></li>
+						<li><a href="javascript:;" class="submit" id="dodajRachunek">Dodaj
+								rachunek</a></li>
 					</ul></li>
 				<li><a href="javascript:;" class="submit" id="historiaOperacji"><i
 						class="fa fa-fw fa-history"></i>Historia operacji</a></li>
@@ -118,15 +121,22 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<center>
-							<div style="display: block" id="firstView">Pierwszy widok
-							</div>
+							<div style="display: block" id="firstView">Pierwszy widok</div>
 							<div style="display: none" id="viewSprzedajWalute">siema1a
 							</div>
 							<div style="display: none" id="viewKupWalute">siema1b</div>
 							<div style="display: none" id="viewWymienWalute">siema1c</div>
 							<div style="display: none" id="viewListaRachunkow">siema2a
 							</div>
-							<div style="display: none" id="viewDodajRachunek">siema2b</div>
+							<div style="display: none" id="viewDodajRachunek">
+								<div class="form-group">
+									<select id="sel1">
+										<c:forEach items="${carrienciesISO}" var="curriencyISO">
+											<option value="${curriencyISO}">${curriencyISO}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
 							<div style="display: none" id="viewHistoriaOperacji">
 								siema3</div>
 							<div style="display: none" id="viewTwojProfil">siema4</div>

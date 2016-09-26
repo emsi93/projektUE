@@ -1,0 +1,38 @@
+create table logins(
+id int primary key auto_increment not null,
+login varchar(10) not null,
+password varchar(20) not null,
+id_user int not null,
+activity int default 1
+);
+create table users(
+id int primary key auto_increment not null,
+name varchar(20) not null,
+surname varchar(40) not null,
+phone_number varchar(10) not null,
+email varchar(50) not null
+);
+alter table logins
+add constraint foreign key (id_user) references users(id);
+create table curriencies(
+iso varchar(3) primary key not null,
+name varchar(100) unique not null
+);
+create table countries(
+iso varchar(2) primary key not null,
+name varchar(50) unique not null
+);
+create table bank_accounts(
+id int primary key auto_increment not null,
+number_account varchar(26) not null,
+country varchar(2),
+curriency varchar(3)
+);
+alter table bank_accounts
+add constraint foreign key (country) references countries(iso);
+alter table bank_accounts
+add constraint foreign key (curriency) references curriencies(iso);
+
+
+
+use system_exchange;

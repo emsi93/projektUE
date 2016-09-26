@@ -1,5 +1,8 @@
 package system.exchange.curriencies.mvc.controller;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -96,6 +99,10 @@ public class SystemExchangeCurrienciesController {
 	@RequestMapping("/menu")
 	public ModelAndView menu() {
 		ModelAndView modelAndView = new ModelAndView("menu");
+		List<String> carrienciesISO = dao.getListCurriencies();
+		carrienciesISO.add("");
+		Collections.sort(carrienciesISO);
+		modelAndView.addObject("carrienciesISO",carrienciesISO);
 		return modelAndView;
 	}
 	

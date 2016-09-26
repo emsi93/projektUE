@@ -2,6 +2,7 @@ package system.exchange.curriencies.mvc.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -70,6 +71,44 @@ public class ExchangeCurrienciesDAOImpl implements
 						return new Integer(rs.getInt(1));
 					}
 				});
+	}
+
+	public int checkUniqueEmail(String email) throws DataAccessException {
+		Object[] parameter = {email};
+		return jdbcTemplate.queryForObject(
+				"SELECT COUNT(*) FROM users WHERE email=?",
+				parameter, new RowMapper<Integer>() {
+
+					public Integer mapRow(ResultSet rs, int rowNumber)
+							throws SQLException {
+						return new Integer(rs.getInt(1));
+					}
+				});
+	}
+
+	public int checkUniqueLogin(String login) throws DataAccessException {
+		Object[] parameter = {login};
+		return jdbcTemplate.queryForObject(
+				"SELECT COUNT(*) FROM logins WHERE login=?",
+				parameter, new RowMapper<Integer>() {
+
+					public Integer mapRow(ResultSet rs, int rowNumber)
+							throws SQLException {
+						return new Integer(rs.getInt(1));
+					}
+				});
+	}
+
+	public List<String> getListCurriencies() throws DataAccessException {
+		return jdbcTemplate
+				.query("SELECT iso FROM curriencies ORDER BY iso ASC",
+						new RowMapper<String>() {
+
+							public String mapRow(ResultSet rs,
+									int rowNumber) throws SQLException {
+								return new String(rs.getString(1));
+							}
+						});
 	}
 
 }
