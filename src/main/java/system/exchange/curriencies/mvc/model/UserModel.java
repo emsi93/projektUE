@@ -1,6 +1,6 @@
 package system.exchange.curriencies.mvc.model;
 
-public class UserFormModel {
+public class UserModel {
 
 	private String name;
 	private String surname;
@@ -9,7 +9,7 @@ public class UserFormModel {
 	private String password2;
 	private String phoneNumber;
 	private String email;
-	public UserFormModel(String name, String surname, String login,
+	public UserModel(String name, String surname, String login,
 			String password, String password2, String phoneNumber, String email) {
 		super();
 		this.name = name;
@@ -21,7 +21,7 @@ public class UserFormModel {
 		this.email = email;
 	}
 	
-	public UserFormModel(){
+	public UserModel(){
 		this(null,null,null,null,null,null,null);
 	}
 

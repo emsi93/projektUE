@@ -1,5 +1,6 @@
 package system.exchange.curriencies.mvc.controller;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import system.exchange.curriencies.modules.ExchangeRate;
 import system.exchange.curriencies.mvc.dao.ExchangeCurrienciesDAOInterface;
-import system.exchange.curriencies.mvc.model.UserFormModel;
+import system.exchange.curriencies.mvc.model.NewBankAccountModel;
+import system.exchange.curriencies.mvc.model.UserModel;
+import system.exchange.curriencies.mvc.validator.BankAccountFormValidator;
 import system.exchange.curriencies.mvc.validator.UserFormValidator;
 
 @Controller
@@ -31,10 +35,18 @@ public class SystemExchangeCurrienciesController {
 	private UserFormValidator userFormValidator;
 
 	@InitBinder("userForm")
-	protected void initShipperFormValidator(WebDataBinder binder) {
+	protected void initUserFormValidator(WebDataBinder binder) {
 		binder.setValidator(userFormValidator);
 	}
 
+	@Autowired
+	private BankAccountFormValidator bankAccountFormValidator;
+	
+	@InitBinder("bankAccountForm")
+	protected void initBankAccountFormValidator(WebDataBinder binder) {
+		binder.setValidator(bankAccountFormValidator);
+	}
+	
 	@RequestMapping("/")
 	public ModelAndView index() {
 		ModelAndView modelAndView = new ModelAndView("index");
@@ -53,12 +65,12 @@ public class SystemExchangeCurrienciesController {
 		return modelAndView;
 	}
 	@RequestMapping(value="/register", method = RequestMethod.GET)
-	public ModelAndView registerUserGet(UserFormModel userFormModelOrNull, Integer messageCodeOrNull)
+	public ModelAndView registerUserGet(UserModel userFormModelOrNull, Integer messageCodeOrNull)
 	{
 		ModelAndView modelAndView = new ModelAndView("register");
 		if(userFormModelOrNull==null)
 		{
-			userFormModelOrNull = new UserFormModel(null,null,null,null,null,null,null);
+			userFormModelOrNull = new UserModel(null,null,null,null,null,null,null);
 		}
 		if (messageCodeOrNull != null) {
 			switch (messageCodeOrNull) {
@@ -76,7 +88,7 @@ public class SystemExchangeCurrienciesController {
 		return modelAndView;
 	}
 	@RequestMapping(value="/register", method = RequestMethod.POST)
-	public ModelAndView registerUserPost(@ModelAttribute("userForm") @Validated UserFormModel userFormModel,
+	public ModelAndView registerUserPost(@ModelAttribute("userForm") @Validated UserModel userFormModel,
 			BindingResult result)
 	{
 		if(result.hasErrors())
@@ -97,13 +109,54 @@ public class SystemExchangeCurrienciesController {
 	}
 	
 	@RequestMapping("/menu")
-	public ModelAndView menu() {
+	public ModelAndView menu() throws IOException {
+		ModelAndView modelAndView = new ModelAndView("menu");
+		
+		return modelAndView;
+	}
+	@RequestMapping(value="/menu", method = RequestMethod.GET)
+	public ModelAndView addAcountGet(NewBankAccountModel newBankAccountModelOrNull, Integer messageCodeOrNull)
+	{
 		ModelAndView modelAndView = new ModelAndView("menu");
 		List<String> carrienciesISO = dao.getListCurriencies();
 		carrienciesISO.add("");
 		Collections.sort(carrienciesISO);
 		modelAndView.addObject("carrienciesISO",carrienciesISO);
+		List<String> countries = dao.getListCountries();
+		countries.add("");
+		Collections.sort(countries);
+		modelAndView.addObject("countries",countries);
+		if(newBankAccountModelOrNull == null)
+		{
+			newBankAccountModelOrNull = new NewBankAccountModel(null,null,null);
+		}
+		
+		if (messageCodeOrNull != null) {
+			switch (messageCodeOrNull) {
+			case 1:
+				modelAndView.addObject("wiadomosc", "èle wype≥ni≥eú pola");
+				break;
+			case 2:
+				modelAndView.addObject("wiadomosc", "Dodanie konta przebieg≥o pomyúlnie");
+				break;
+			default:
+				break;
+			}
+		}
+		modelAndView.addObject("bankAccountForm", newBankAccountModelOrNull);
 		return modelAndView;
 	}
-	
+	@RequestMapping(value="/menu", method = RequestMethod.POST)
+	public ModelAndView addAcountPost(@ModelAttribute("bankAccountForm") @Validated NewBankAccountModel newBankAccountModel,
+			BindingResult result)
+	{
+		if(result.hasErrors())
+			return addAcountGet(newBankAccountModel,1);
+		else
+		{
+			dao.addBankAccount(newBankAccountModel);
+			return addAcountGet(newBankAccountModel,2);
+		}
+			
+	}
 }

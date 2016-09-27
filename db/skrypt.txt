@@ -24,7 +24,7 @@ name varchar(50) unique not null
 );
 create table bank_accounts(
 id int primary key auto_increment not null,
-number_account varchar(26) not null,
+number_account varchar(32) not null,
 country varchar(2),
 curriency varchar(3)
 );
@@ -32,7 +32,12 @@ alter table bank_accounts
 add constraint foreign key (country) references countries(iso);
 alter table bank_accounts
 add constraint foreign key (curriency) references curriencies(iso);
-
-
-
-use system_exchange;
+create table user_accounts(
+id int primary key auto_increment not null,
+id_login int not null,
+id_account int not null
+);
+alter table user_accounts
+add constraint foreign key (id_login) references logins(id);
+alter table user_accounts
+add constraint foreign key (id_account) references bank_accounts(id);
