@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import system.exchange.curriencies.mvc.dao.ExchangeCurrienciesDAOInterface;
-import system.exchange.curriencies.mvc.model.UserFormModel;
+import system.exchange.curriencies.mvc.model.NewBankAccountModel;
+import system.exchange.curriencies.mvc.model.UserModel;
 
 @Service("ExchangeCurrienciesDAO")
 @Scope("singleton")
@@ -48,7 +49,7 @@ public class ExchangeCurrienciesDAOImpl implements
 
 	}
 
-	public void addUser(UserFormModel userFormModel) throws DataAccessException {
+	public void addUser(UserModel userFormModel) throws DataAccessException {
 
 		jdbcTemplate
 				.update("INSERT INTO users(name,surname,phone_number,email) VALUES(?,?,?,?)",
@@ -111,4 +112,67 @@ public class ExchangeCurrienciesDAOImpl implements
 						});
 	}
 
+	public List<String> getListCountries() throws DataAccessException {
+		return jdbcTemplate
+				.query("SELECT name FROM countries ORDER BY name ASC",
+						new RowMapper<String>() {
+
+							public String mapRow(ResultSet rs,
+									int rowNumber) throws SQLException {
+								return new String(rs.getString(1));
+							}
+						});
+	}
+
+	public int chechkUniqueNumberAccount(String numberAccount)
+			throws DataAccessException {
+		Object[] parameter = {numberAccount};
+		return jdbcTemplate.queryForObject(
+				"SELECT COUNT(*) FROM bank_accounts WHERE number_account=?",
+				parameter, new RowMapper<Integer>() {
+
+					public Integer mapRow(ResultSet rs, int rowNumber)
+							throws SQLException {
+						return new Integer(rs.getInt(1));
+					}
+				});
+	}
+
+	public void addBankAccount(NewBankAccountModel newBankAccountModel)
+			throws DataAccessException {
+		// TODO Auto-generated method stub
+		String countryISO = getCountryISO(newBankAccountModel.getCountry());
+		jdbcTemplate.update("INSERT INTO bank_accounts(number_account,country,curriency) VALUES(?,?,?)",newBankAccountModel.getNumberAccount(),countryISO,newBankAccountModel.getCurrency());
+		int id = getBankAccountID(newBankAccountModel.getNumberAccount());
+		jdbcTemplate.update("INSERT INTO user_accounts(id_login,id_account) VALUES(?,?)",2,id);
+	}
+
+	public String getCountryISO(String countryName) throws DataAccessException {
+		Object[] parameter = {countryName};
+		return jdbcTemplate.queryForObject(
+				"SELECT iso FROM countries WHERE name=?",
+				parameter, new RowMapper<String>() {
+
+					public String mapRow(ResultSet rs, int rowNumber)
+							throws SQLException {
+						return new String(rs.getString(1));
+					}
+				});
+	}
+
+	public int getBankAccountID(String numberAccount)
+			throws DataAccessException {
+		Object[] parameter = {numberAccount};
+		return jdbcTemplate.queryForObject(
+				"SELECT id FROM bank_accounts WHERE number_account=?",
+				parameter, new RowMapper<Integer>() {
+
+					public Integer mapRow(ResultSet rs, int rowNumber)
+							throws SQLException {
+						return new Integer(rs.getInt(1));
+					}
+				});
+	}
+
+	
 }

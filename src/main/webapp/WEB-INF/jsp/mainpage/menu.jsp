@@ -27,6 +27,8 @@
 <link
 	href="/system-exchange-curriencies/static/menu/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
+<link href="/system-exchange-curriencies/static/css/errors.css"
+	rel="stylesheet">
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -64,7 +66,7 @@
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="menu">System wymiany</a>
+			<a class="navbar-brand" href="">System wymiany</a>
 		</div>
 		<!-- Top Menu Items -->
 		<ul class="nav navbar-right top-nav">
@@ -119,29 +121,52 @@
 
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col-lg-12">
+					<div class="col-lg-6">
 						<center>
-							<div style="display: block" id="firstView">Pierwszy widok</div>
-							<div style="display: none" id="viewSprzedajWalute">siema1a
-							</div>
+							<div style="display: block" id="firstView">${wiadomosc}</div>
+							<div style="display: none" id="viewSprzedajWalute">siema1a</div>
 							<div style="display: none" id="viewKupWalute">siema1b</div>
 							<div style="display: none" id="viewWymienWalute">siema1c</div>
-							<div style="display: none" id="viewListaRachunkow">siema2a
-							</div>
+							<div style="display: none" id="viewListaRachunkow">siema2a</div>
+							</center>
 							<div style="display: none" id="viewDodajRachunek">
-								<div class="form-group">
-									<select id="sel1">
-										<c:forEach items="${carrienciesISO}" var="curriencyISO">
-											<option value="${curriencyISO}">${curriencyISO}</option>
-										</c:forEach>
-									</select>
-								</div>
+								<br />
+								<h2 class="section-heading">
+									Tworzenie nowego rachunku
+									</h5>
+									<br /> <br /> *Pola wymagane
+									<form:form method="post" modelAttribute="bankAccountForm"
+										action="/system-exchange-curriencies/mainpage/menu/"
+										role="form">
+										<div class="form-group">
+											<br/>
+											<label>*Numer rachunku:</label>
+											<form:input path="numberAccount" type="text"
+												class="form-control" placeholder="*Numer rachunku..." />
+											<div class="errors">
+												<form:errors path="numberAccount" element="div" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label>*Waluta rachunku:</label> <form:select path="currency" items="${carrienciesISO}" class="form-control" />
+											<div class="errors">
+												<form:errors path="currency" element="div" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label>*Kraj:</label> <form:select path="country" items="${countries}" class="form-control"/>
+											<div class="errors">
+												<form:errors path="country" element="div" />
+											</div>
+										</div>
+										<form:input class="submit btn btn-warning" path=""
+											type="submit" value="Dodaj rachunek"></form:input>
+									</form:form>
 							</div>
-							<div style="display: none" id="viewHistoriaOperacji">
-								siema3</div>
+							<div style="display: none" id="viewHistoriaOperacji">siema3</div>
 							<div style="display: none" id="viewTwojProfil">siema4</div>
 							<div style="display: none" id="viewDodajOdbiorce">siema5</div>
-						</center>
+						
 					</div>
 				</div>
 			</div>

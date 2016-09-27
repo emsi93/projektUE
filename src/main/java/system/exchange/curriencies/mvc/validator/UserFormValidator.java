@@ -8,7 +8,7 @@ import org.springframework.validation.Validator;
 
 import system.exchange.curriencies.modules.ValidationUtils;
 import system.exchange.curriencies.mvc.dao.ExchangeCurrienciesDAOInterface;
-import system.exchange.curriencies.mvc.model.UserFormModel;
+import system.exchange.curriencies.mvc.model.UserModel;
 
 
 
@@ -34,11 +34,11 @@ public class UserFormValidator implements Validator {
 	
 	public boolean supports(Class<?> clazz) {
 		// TODO Auto-generated method stub
-		return UserFormModel.class.equals(clazz);
+		return UserModel.class.equals(clazz);
 	}
 
 	public void validate(Object target, Errors errors) {
-		UserFormModel userFormModel = (UserFormModel) target;
+		UserModel userFormModel = (UserModel) target;
 		
 		ValidationUtils.rejectIfEmpty(errors, "name",
 				OBLIGATORY_FIELD_ERROR_MSG);
