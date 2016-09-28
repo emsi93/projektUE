@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 
+import system.exchange.curriencies.mvc.model.BankAccountModel;
 import system.exchange.curriencies.mvc.model.NewBankAccountModel;
 import system.exchange.curriencies.mvc.model.UserModel;
 
@@ -31,6 +32,8 @@ public interface ExchangeCurrienciesDAOInterface {
 	public List<String> getListCountries() throws DataAccessException;
 	
 	public String getCountryISO(String countryName) throws DataAccessException;
+	
+	public List<BankAccountModel> getListBankAccounts(int idUser) throws DataAccessException;
 	
 	
 	

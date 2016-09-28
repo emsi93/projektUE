@@ -7,6 +7,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import system.exchange.curriencies.modules.ExchangeRate;
 import system.exchange.curriencies.mvc.dao.ExchangeCurrienciesDAOInterface;
+import system.exchange.curriencies.mvc.model.BankAccountModel;
 import system.exchange.curriencies.mvc.model.NewBankAccountModel;
 import system.exchange.curriencies.mvc.model.UserModel;
 import system.exchange.curriencies.mvc.validator.BankAccountFormValidator;
@@ -126,6 +129,19 @@ public class SystemExchangeCurrienciesController {
 		countries.add("");
 		Collections.sort(countries);
 		modelAndView.addObject("countries",countries);
+		List<BankAccountModel> bankAccountsList = dao.getListBankAccounts(2);
+		modelAndView.addObject("bankAccountsList",bankAccountsList);
+		JSONArray jsonArray = new JSONArray();
+		for(int i=0;i<bankAccountsList.size();i++)
+		{
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("numberAccount", bankAccountsList.get(i).getNumberAccount());
+			jsonObject.put("country", bankAccountsList.get(i).getCountry());
+			jsonObject.put("carrency", bankAccountsList.get(i).getCarrency());
+			jsonArray.put(jsonObject);
+		}
+		modelAndView.addObject("bankAccountsJSON",jsonArray);	
+		
 		if(newBankAccountModelOrNull == null)
 		{
 			newBankAccountModelOrNull = new NewBankAccountModel(null,null,null);

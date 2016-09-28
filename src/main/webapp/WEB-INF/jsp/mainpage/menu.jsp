@@ -10,6 +10,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>System wymiany walut - menu</title>
+<script type="text/javascript">	
+	var list = ${bankAccountsJSON}
+</script>
 <link
 	href="/system-exchange-curriencies/static/menu/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -50,9 +53,15 @@
 	src="/system-exchange-curriencies/static/menu/js/plugins/morris/morris.min.js"></script>
 <script
 	src="/system-exchange-curriencies/static/menu/js/plugins/morris/morris-data.js"></script>
+
+<!-- AngularJS -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+<script src="/system-exchange-curriencies/static/menu/js/angular.js"></script>
+
+
 </head>
 
-<body>
+<body ng-app="myModule">
 
 	<div id="wrapper">
 
@@ -127,46 +136,77 @@
 							<div style="display: none" id="viewSprzedajWalute">siema1a</div>
 							<div style="display: none" id="viewKupWalute">siema1b</div>
 							<div style="display: none" id="viewWymienWalute">siema1c</div>
-							<div style="display: none" id="viewListaRachunkow">siema2a</div>
-							</center>
-							<div style="display: none" id="viewDodajRachunek">
-								<br />
-								<h2 class="section-heading">
-									Tworzenie nowego rachunku
-									</h5>
-									<br /> <br /> *Pola wymagane
-									<form:form method="post" modelAttribute="bankAccountForm"
-										action="/system-exchange-curriencies/mainpage/menu/"
-										role="form">
-										<div class="form-group">
-											<br/>
-											<label>*Numer rachunku:</label>
-											<form:input path="numberAccount" type="text"
-												class="form-control" placeholder="*Numer rachunku..." />
-											<div class="errors">
-												<form:errors path="numberAccount" element="div" />
-											</div>
-										</div>
-										<div class="form-group">
-											<label>*Waluta rachunku:</label> <form:select path="currency" items="${carrienciesISO}" class="form-control" />
-											<div class="errors">
-												<form:errors path="currency" element="div" />
-											</div>
-										</div>
-										<div class="form-group">
-											<label>*Kraj:</label> <form:select path="country" items="${countries}" class="form-control"/>
-											<div class="errors">
-												<form:errors path="country" element="div" />
-											</div>
-										</div>
-										<form:input class="submit btn btn-warning" path=""
-											type="submit" value="Dodaj rachunek"></form:input>
-									</form:form>
-							</div>
-							<div style="display: none" id="viewHistoriaOperacji">siema3</div>
-							<div style="display: none" id="viewTwojProfil">siema4</div>
-							<div style="display: none" id="viewDodajOdbiorce">siema5</div>
-						
+						</center>
+						<div style="display: none" id="viewListaRachunkow"   ng-controller="myController">
+							<br />
+							<br />
+							<h2 class="section-heading">Lista rachunków</h2>
+							<br />
+							<br />
+							{{2+2}}
+							Szukaj: <input type="text" placeholder="Szukaj" ng-model="searchText"/>
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Numer rachunku</th>
+										<th>Kraj</th>
+										<th>Waluta</th>
+									</tr>
+								</thead>
+								<tbody>
+									<%-- <c:forEach items="${bankAccountsList}" var="bankAccount"
+										varStatus="loop"> --%>
+										<tr ng-repeat="bankAccount in bankAccounts | filter:searchText">
+											<td>{{ bankAccount.numberAccount }}</td>
+											<td>{{ bankAccount.country }}</td>
+											<td>{{ bankAccount.carrency }}</td>
+
+										</tr>
+									<%-- </c:forEach> --%>
+
+								</tbody>
+							</table>
+						</div>
+
+						<div style="display: none" id="viewDodajRachunek">
+							<br />
+							<br />
+							<h2 class="section-heading">Tworzenie nowego rachunku</h2>
+							<br /> <br /> *Pola wymagane
+							<form:form method="post" modelAttribute="bankAccountForm"
+								action="/system-exchange-curriencies/mainpage/menu/" role="form">
+								<div class="form-group">
+									<br /> <label>*Numer rachunku:</label>
+									<form:input path="numberAccount" type="text"
+										class="form-control" placeholder="*Numer rachunku..." />
+									<div class="errors">
+										<form:errors path="numberAccount" element="div" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label>*Waluta rachunku:</label>
+									<form:select path="currency" items="${carrienciesISO}"
+										class="form-control" />
+									<div class="errors">
+										<form:errors path="currency" element="div" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label>*Kraj:</label>
+									<form:select path="country" items="${countries}"
+										class="form-control" />
+									<div class="errors">
+										<form:errors path="country" element="div" />
+									</div>
+								</div>
+								<form:input class="submit btn btn-warning" path="" type="submit"
+									value="Dodaj rachunek"></form:input>
+							</form:form>
+						</div>
+						<div style="display: none" id="viewHistoriaOperacji">siema3</div>
+						<div style="display: none" id="viewTwojProfil">siema4</div>
+						<div style="display: none" id="viewDodajOdbiorce">siema5</div>
+
 					</div>
 				</div>
 			</div>
@@ -295,4 +335,5 @@ div.content2 {
 		document.getElementById("firstView").style.display = "none";
 	});
 </script>
+
 </html>

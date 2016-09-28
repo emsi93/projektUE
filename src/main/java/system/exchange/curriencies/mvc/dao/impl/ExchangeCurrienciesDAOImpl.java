@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
+import system.exchange.curriencies.modules.FormatNumberAccount;
 import system.exchange.curriencies.mvc.dao.ExchangeCurrienciesDAOInterface;
+import system.exchange.curriencies.mvc.model.BankAccountModel;
 import system.exchange.curriencies.mvc.model.NewBankAccountModel;
 import system.exchange.curriencies.mvc.model.UserModel;
 
@@ -126,7 +128,7 @@ public class ExchangeCurrienciesDAOImpl implements
 
 	public int chechkUniqueNumberAccount(String numberAccount)
 			throws DataAccessException {
-		Object[] parameter = {numberAccount};
+		Object[] parameter = {FormatNumberAccount.changeFormat(numberAccount)};
 		return jdbcTemplate.queryForObject(
 				"SELECT COUNT(*) FROM bank_accounts WHERE number_account=?",
 				parameter, new RowMapper<Integer>() {
@@ -142,8 +144,8 @@ public class ExchangeCurrienciesDAOImpl implements
 			throws DataAccessException {
 		// TODO Auto-generated method stub
 		String countryISO = getCountryISO(newBankAccountModel.getCountry());
-		jdbcTemplate.update("INSERT INTO bank_accounts(number_account,country,curriency) VALUES(?,?,?)",newBankAccountModel.getNumberAccount(),countryISO,newBankAccountModel.getCurrency());
-		int id = getBankAccountID(newBankAccountModel.getNumberAccount());
+		jdbcTemplate.update("INSERT INTO bank_accounts(number_account,country,curriency) VALUES(?,?,?)",FormatNumberAccount.changeFormat(newBankAccountModel.getNumberAccount()),countryISO,newBankAccountModel.getCurrency());
+		int id = getBankAccountID(FormatNumberAccount.changeFormat(newBankAccountModel.getNumberAccount()));
 		jdbcTemplate.update("INSERT INTO user_accounts(id_login,id_account) VALUES(?,?)",2,id);
 	}
 
@@ -172,6 +174,19 @@ public class ExchangeCurrienciesDAOImpl implements
 						return new Integer(rs.getInt(1));
 					}
 				});
+	}
+
+	public List<BankAccountModel> getListBankAccounts(int idUser)
+			throws DataAccessException {
+		return jdbcTemplate
+				.query("SELECT bc.number_account, bc.country, bc.curriency FROM bank_accounts bc INNER JOIN user_accounts uc on bc.id = uc.id_account WHERE uc.id_login=?",
+						new RowMapper<BankAccountModel>() {
+
+							public BankAccountModel mapRow(ResultSet rs,
+									int rowNumber) throws SQLException {
+								return new BankAccountModel(rs.getString(1),rs.getString(2),rs.getString(3));
+							}
+						}, new Object[] { idUser });
 	}
 
 	
