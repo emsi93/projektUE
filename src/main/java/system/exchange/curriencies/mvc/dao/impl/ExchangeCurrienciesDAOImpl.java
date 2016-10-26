@@ -59,8 +59,10 @@ public class ExchangeCurrienciesDAOImpl implements
 						userFormModel.getPhoneNumber(),
 						userFormModel.getEmail());
 		int id = getUserID(userFormModel.getEmail());
-		jdbcTemplate.update("INSERT INTO logins(login,password,id_user) VALUES(?,?,?)",
-				userFormModel.getLogin(), userFormModel.getPassword(), id);
+		jdbcTemplate
+				.update("INSERT INTO logins(login,password,id_user,role) VALUES(?,?,?)",
+						userFormModel.getLogin(), userFormModel.getPassword(),
+						id, "ROLE_USER");
 	}
 
 	public int getUserID(String email) throws DataAccessException {
@@ -77,10 +79,10 @@ public class ExchangeCurrienciesDAOImpl implements
 	}
 
 	public int checkUniqueEmail(String email) throws DataAccessException {
-		Object[] parameter = {email};
+		Object[] parameter = { email };
 		return jdbcTemplate.queryForObject(
-				"SELECT COUNT(*) FROM users WHERE email=?",
-				parameter, new RowMapper<Integer>() {
+				"SELECT COUNT(*) FROM users WHERE email=?", parameter,
+				new RowMapper<Integer>() {
 
 					public Integer mapRow(ResultSet rs, int rowNumber)
 							throws SQLException {
@@ -90,10 +92,10 @@ public class ExchangeCurrienciesDAOImpl implements
 	}
 
 	public int checkUniqueLogin(String login) throws DataAccessException {
-		Object[] parameter = {login};
+		Object[] parameter = { login };
 		return jdbcTemplate.queryForObject(
-				"SELECT COUNT(*) FROM logins WHERE login=?",
-				parameter, new RowMapper<Integer>() {
+				"SELECT COUNT(*) FROM logins WHERE login=?", parameter,
+				new RowMapper<Integer>() {
 
 					public Integer mapRow(ResultSet rs, int rowNumber)
 							throws SQLException {
@@ -103,32 +105,32 @@ public class ExchangeCurrienciesDAOImpl implements
 	}
 
 	public List<String> getListCurriencies() throws DataAccessException {
-		return jdbcTemplate
-				.query("SELECT iso FROM curriencies ORDER BY iso ASC",
-						new RowMapper<String>() {
+		return jdbcTemplate.query(
+				"SELECT iso FROM curriencies ORDER BY iso ASC",
+				new RowMapper<String>() {
 
-							public String mapRow(ResultSet rs,
-									int rowNumber) throws SQLException {
-								return new String(rs.getString(1));
-							}
-						});
+					public String mapRow(ResultSet rs, int rowNumber)
+							throws SQLException {
+						return new String(rs.getString(1));
+					}
+				});
 	}
 
 	public List<String> getListCountries() throws DataAccessException {
-		return jdbcTemplate
-				.query("SELECT name FROM countries ORDER BY name ASC",
-						new RowMapper<String>() {
+		return jdbcTemplate.query(
+				"SELECT name FROM countries ORDER BY name ASC",
+				new RowMapper<String>() {
 
-							public String mapRow(ResultSet rs,
-									int rowNumber) throws SQLException {
-								return new String(rs.getString(1));
-							}
-						});
+					public String mapRow(ResultSet rs, int rowNumber)
+							throws SQLException {
+						return new String(rs.getString(1));
+					}
+				});
 	}
 
 	public int chechkUniqueNumberAccount(String numberAccount)
 			throws DataAccessException {
-		Object[] parameter = {FormatNumberAccount.changeFormat(numberAccount)};
+		Object[] parameter = { FormatNumberAccount.changeFormat(numberAccount) };
 		return jdbcTemplate.queryForObject(
 				"SELECT COUNT(*) FROM bank_accounts WHERE number_account=?",
 				parameter, new RowMapper<Integer>() {
@@ -140,20 +142,26 @@ public class ExchangeCurrienciesDAOImpl implements
 				});
 	}
 
-	public void addBankAccount(NewBankAccountModel newBankAccountModel)
+	public void addBankAccount(NewBankAccountModel newBankAccountModel, int userID)
 			throws DataAccessException {
 		// TODO Auto-generated method stub
 		String countryISO = getCountryISO(newBankAccountModel.getCountry());
-		jdbcTemplate.update("INSERT INTO bank_accounts(number_account,country,curriency) VALUES(?,?,?)",FormatNumberAccount.changeFormat(newBankAccountModel.getNumberAccount()),countryISO,newBankAccountModel.getCurrency());
-		int id = getBankAccountID(FormatNumberAccount.changeFormat(newBankAccountModel.getNumberAccount()));
-		jdbcTemplate.update("INSERT INTO user_accounts(id_login,id_account) VALUES(?,?)",2,id);
+		String accountNumber = FormatNumberAccount.changeFormat(newBankAccountModel.getNumberAccount());
+		jdbcTemplate
+				.update("INSERT INTO bank_accounts(number_account,country,curriency) VALUES(?,?,?)",
+						accountNumber, countryISO,
+						newBankAccountModel.getCurrency());
+		int accountID = getBankAccountID(accountNumber);
+		jdbcTemplate.update(
+				"INSERT INTO user_accounts(id_login,id_account) VALUES(?,?)",
+				userID, accountID);
 	}
 
 	public String getCountryISO(String countryName) throws DataAccessException {
-		Object[] parameter = {countryName};
+		Object[] parameter = { countryName };
 		return jdbcTemplate.queryForObject(
-				"SELECT iso FROM countries WHERE name=?",
-				parameter, new RowMapper<String>() {
+				"SELECT iso FROM countries WHERE name=?", parameter,
+				new RowMapper<String>() {
 
 					public String mapRow(ResultSet rs, int rowNumber)
 							throws SQLException {
@@ -164,7 +172,7 @@ public class ExchangeCurrienciesDAOImpl implements
 
 	public int getBankAccountID(String numberAccount)
 			throws DataAccessException {
-		Object[] parameter = {numberAccount};
+		Object[] parameter = { numberAccount };
 		return jdbcTemplate.queryForObject(
 				"SELECT id FROM bank_accounts WHERE number_account=?",
 				parameter, new RowMapper<Integer>() {
@@ -184,10 +192,24 @@ public class ExchangeCurrienciesDAOImpl implements
 
 							public BankAccountModel mapRow(ResultSet rs,
 									int rowNumber) throws SQLException {
-								return new BankAccountModel(rs.getString(1),rs.getString(2),rs.getString(3));
+								return new BankAccountModel(rs.getString(1), rs
+										.getString(2), rs.getString(3));
 							}
 						}, new Object[] { idUser });
 	}
 
-	
+	public int getLoginIDByLogin(String name) throws DataAccessException {
+		Object[] parameter = { name };
+		return jdbcTemplate
+				.queryForObject(
+						"SELECT id FROM logins WHERE login = ?",
+						parameter, new RowMapper<Integer>() {
+
+							public Integer mapRow(ResultSet rs, int rowNumber)
+									throws SQLException {
+								return new Integer(rs.getInt(1));
+							}
+						});
+	}
+
 }

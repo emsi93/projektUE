@@ -15,7 +15,7 @@ public interface ExchangeCurrienciesDAOInterface {
 	
 	public void addUser(UserModel userFormModel) throws DataAccessException;
 	
-	public void addBankAccount(NewBankAccountModel newBankAccountModel)throws DataAccessException;
+	public void addBankAccount(NewBankAccountModel newBankAccountModel, int userID)throws DataAccessException;
 	
 	public int getUserID(String email) throws DataAccessException;
 	
@@ -34,6 +34,10 @@ public interface ExchangeCurrienciesDAOInterface {
 	public String getCountryISO(String countryName) throws DataAccessException;
 	
 	public List<BankAccountModel> getListBankAccounts(int idUser) throws DataAccessException;
+
+	public int getLoginIDByLogin(String name)throws DataAccessException;
+
+	
 	
 	
 	
